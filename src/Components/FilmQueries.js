@@ -1,27 +1,27 @@
 import React from 'react'
 import { useQuery, gql } from "@apollo/client";
-const FILMS_QUERY = gql`
-  {
-    launchesPast(limit: 20) {
-      id
-      mission_name
+const EXCHANGE_RATES = gql`
+  query GetExchangeRates {
+    rates(currency: "USD") {
+      currency
+      rate
     }
   }
 `;
+const handleChange = () => { 
+console.log("handlechnage");
+}
 const FilmQueries = () => {
-    const { data, loading, error } = useQuery(FILMS_QUERY);
+    const { data, loading, error } = useQuery(EXCHANGE_RATES);
     if (loading) return "Loading...";
     if (error) return <pre>{error.message}</pre>
-    return (
-        <div>
-        <h1>SpaceX Launches</h1>
-        <ul>
-          {data.launchesPast.map((launch) => (
-            <li key={launch.id}>{launch.mission_name}</li>
-          ))}
-        </ul>
-      </div>
-    )
+    return data.rates.map(({ currency, rate , __typename }) => (
+    <div key={currency}>
+      <input onChange={handleChange} value={currency}>
+        {/* {currency}: {rate} : {__typename} */}
+      </input>
+    </div>
+  ));
 }
 
 export default FilmQueries
